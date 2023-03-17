@@ -1,0 +1,28 @@
+SELECT /* +parallel*/
+ gonderen.value_date,
+ gonderenc.full_name    AS gonderenin_adi,
+ qebuledend.full_name   AS qebuledenin_adi,
+ qebuledendemp.fin      AS qebuledenfini,
+ gonderen.pan           AS gonderen_pan,
+ qebuleden.pan          AS qebuleden_pan,
+ gonderen.accountnoone  AS gonderen,
+ qebuleden.accountnoone AS gebul_eden_account,
+ gonderen.org_amount,
+ gonderen.org_currency,
+ gonderen.fcy_amount,
+ gonderen.currency
+  FROM cms.f_transaction_details gonderen
+ INNER JOIN cms.f_transaction_details qebuleden
+    ON gonderen.invoice = qebuleden.invoice
+ INNER JOIN cms.d_customer gonderenc
+    ON gonderen.idclient = gonderenc.cms_id
+ INNER JOIN cms.d_customer qebuledend
+    ON qebuleden.idclient = qebuledend.cms_id
+ INNER JOIN fraud.emp_2 qebuledendemp
+    ON qebuledend.pin = qebuledendemp.fin
+ INNER JOIN (select unique ipo_goturenler from fraud.ipo_goturenler) ipo_goturenler
+    ON ipo_goturenler.ipo_goturenler = gonderenc.pin
+ WHERE gonderen.value_date BETWEEN TO_DATE('01.01.2019', 'dd.mm.yyyy') AND TO_DATE('01.03.2023', 'dd.mm.yyyy')
+   AND gonderen.entcode  = '32'
+   AND qebuleden.entcode = '33'
+   AND gonderen.termcode = '42271';
