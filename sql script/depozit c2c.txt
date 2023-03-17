@@ -1,0 +1,27 @@
+with accountone as (select f.account from cms.d_Card f where f.finprofile_name like '254/331%' and f.status = '1'),
+
+     idclient as ( select cms_id from cms.d_customer w inner join (select  g.fin from fraud.emp_2 g) x on w.pin=x.fin)
+
+
+
+select /* +parallel*/ alan.pin as alan,gonderen.pin as gonderen,a.*, b.accountnoone,
+
+   case when a.idclient = b.idclient then 'OK' else 'Not ok' end Yoxlama
+
+   from cms.f_transaction_Details A join cms.f_transaction_details B on a.invoice = b.invoice
+
+   join dwh.d_customer gonderen on a.idclient =gonderen.cms_id
+
+   join dwh.d_customer alan on b.idclient =alan.cms_id
+
+   join accountone on a.accountnoone =accountone.account
+
+   join idclient on  b.idclient=idclient.cms_id
+
+ where
+
+       a.entcode = '32'
+
+   and b.entcode = '33'
+
+   and a.value_date between '01-Jan-23' and '23-Feb-23'

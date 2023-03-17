@@ -1,0 +1,15 @@
+CREATE TABLE gambling (
+    op_date   DATE,
+    pin       VARCHAR2(20),
+    ad        VARCHAR2(100),
+    vezife    VARCHAR2(100),
+    hire_date DATE,
+    mcc       NUMBER,
+    amount    NUMBER,
+    merchant  VARCHAR2(100)
+);
+
+SELECT
+    *
+FROM
+    gambling;

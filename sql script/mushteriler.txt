@@ -1,0 +1,9 @@
+select A.CIF,
+       A.PIN,
+       A.FULL_NAME,
+       A.BIRTH_DATE,
+       A.TELEPHONE,
+       REGISTERED_ADDRESS,
+       POSITION
+  from DWH.D_CUSTOMER A
+ WHERE SUBSTR(A.TELEPHONE, -9) = '504362252'

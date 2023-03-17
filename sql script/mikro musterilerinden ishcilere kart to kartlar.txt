@@ -1,0 +1,40 @@
+with mikro as 
+ (select unique           a.START_DATE MIKRO_BASHLAMA,
+         a.MATURITY_DATE  MIKRO_BITME,
+         a.INITIAL_AMOUNT MIKRO_MEBLEG,
+         a.CIF            MIKRO_CIF,
+         a.CMS_ID         MIKRO_CMS,
+         a.CUSTOMER_NAME  MIKRO_MUSTERI,
+         EXPERT_HR_CODE   MIKRO_KOD,
+         a.EXPERT_NAME    MIKRO_ISHCHI
+    from dwh.d_contract_credit a
+   inner join (select a.CODE
+                from dwh.d_product a
+               where lower(a.description) like '%mikro%') b
+      on a.product_code = b.code),
+c2c as
+ (select a.value_date,
+         a.idclient     as alan,
+         b.idclient     as gonderen,
+         a.pan          as gonderen_pan,
+         a.accountnoone AS gonderen_acc,
+         c.full_name    as Gonderenin_adi,
+         e.pin          as qebul_edenin_fini,
+         d.full_name    as Qebuledenin_Adi,
+         B.PAN          as qebuleden_pan,
+         B.ACCOUNTNOONE as gebul_eden,
+         a.org_amount,
+         a.org_currency,
+         a.fcy_amount,
+         a.currency
+    from cms.f_transaction_details A inner join cms.f_transaction_details B on A.Invoice = b.Invoice
+   inner join cms.d_customer c on a.idclient = c.cms_id
+   inner join cms.d_customer D on b.idclient = d.cms_id
+   INNER JOIN dwh.d_customer e ON B.idclient = e.cms_id
+   inner join emp on emp.fin = e.pin
+   where a.value_date between to_date('01.01.2023', 'dd.mm.yyyy') and to_date('31.01.2023', 'dd.mm.yyyy')
+     and a.entcode = '32'
+     AND B.ENTCODE = '33'
+     AND A.TERMCODE = '42271')
+
+select /*+parallel */ * from c2c a inner join mikro c on a.gonderen = c.MIKRO_CMS;

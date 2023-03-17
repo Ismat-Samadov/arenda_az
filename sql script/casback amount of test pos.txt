@@ -1,0 +1,54 @@
+select k.CMS_ID,
+       c.FULL_NAME,
+       sum(case
+             when lower(k.direction) = 'credit' then
+              k.cashback_amount
+           end) as credit,
+       sum(case
+             when lower(k.direction) = 'reverse' then
+              k.cashback_amount
+           end) as reversal,
+       case
+         when (sum(case
+                     when lower(k.direction) = 'credit' then
+                      k.cashback_amount
+                   end) - sum(case
+                                 when lower(k.direction) = 'reverse' then
+                                  k.cashback_amount
+                               end)) = 0 then
+          'no'
+         else
+          'yes'
+       end as difference,
+       Sum(k.cashback_amount) as cashback_amount,
+       trunc(Sum(k.cashback_amount)) rounded_cashback_amount
+  from cms.f_cashback_transaction k
+  left join cms.d_customer c
+    on k.cms_id = c.cms_id
+ where k.bank_date between to_date('01.09.2022', 'dd.mm.yyyy') and
+       to_date('01.02.2023', 'dd.mm.yyyy')
+   and substr(lower(TERMOWNER), 1, 4) = 'test'
+   ---and not exists (select * from cms.f_cashback_transaction f where k.cms_id = f.cms_id )
+   and k.cms_id in (select m.credit_cms_id
+                                      from cms.f_transaction m
+                                     where m.debitentcode = '3'
+                                       and m.credit_cms_id in
+                                           (select k.cms_id
+                                              from cms.d_card k
+                                             where k.ministry_code = '037'
+                                               and k.product_code = '3'))
+ group by k.CMS_ID, c.FULL_NAME
+ order by rounded_cashback_amount desc;
+
+------------------
+select 
+       k.CMS_ID, 
+       c.FULL_NAME,
+       Sum(k.cashback_amount) as cashback_amount,
+       trunc(Sum(k.cashback_amount)) rounded_cashback_amount
+  from cms.f_cashback_transaction k left join cms.d_customer c on k.cms_id = c.cms_id
+ where     k.bank_date between to_date('01.09.2022','dd.mm.yyyy') and to_date('01.02.2023','dd.mm.yyyy')
+       and substr(lower(TERMOWNER) ,1,4) ='test' 
+       and not exists (select * from cms.f_cashback_transaction f where k.cms_id = f.cms_id and lower(k.direction) = 'reverse')
+ group by k.CMS_ID,c.FULL_NAME
+ order by 3 desc;

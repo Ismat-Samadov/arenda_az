@@ -1,0 +1,15 @@
+with employee as
+ (select z.cms_id
+    from cms.d_customer z
+   where z.cms_id in
+         (select m.credit_cms_id
+            from cms.f_transaction m
+           where m.debitentcode = '3'
+             and m.credit_cms_id in
+                 (select k.cms_id
+                    from cms.d_card k
+                   where k.ministry_code = '037'
+                     and k.product_code = '3')
+             and m.value_date between '30-Jan-23' and '31-Jan-23'))
+             
+select a.CIF,a.cms_id,a.PIN,a.FULL_NAME from dwh.d_customer a inner join employee b on a.cms_id = b.cms_id;

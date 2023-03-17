@@ -1,0 +1,10 @@
+select /*+parallel */
+ TO_CHAR(A.BANK_DATE, 'YYYY') AS YEARS,
+ TO_CHAR(A.BANK_DATE, 'Month') as "MONTHS",
+ sum(a.cashback_amount) summa
+  from cms.f_cashback_transaction a
+ inner join DWH.D_CUSTOMER D    on a.cms_id = d.cms_id
+ where DIRECTION = 'CREDIT'
+  AND A.TERMOWNER ='MONTHLY INTEREST INCOME'
+ group by TO_CHAR(A.BANK_DATE, 'YYYY'), TO_CHAR(A.BANK_DATE, 'Month')
+ ORDER BY YEARS;

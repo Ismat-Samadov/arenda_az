@@ -1,0 +1,137 @@
+select x.client_id,
+       y.NAME,
+       y.FULL_NAME,
+       listagg(unique x.DEBIT_PRODUCT, ' , ') x_DEBIT_PRODUCT,   
+       listagg(unique x.DEBIT_TRANS_ID, ' , ') x_DEBIT_TRANS_ID,
+       count(unique case when x.bank_date between '01-Nov-22' and '30-Nov-22' then x.op_id end) as November, 
+       count(unique case when x.bank_date between '01-Dec-22' and '31-Dec-22' then x.op_id end) as December,
+       count(unique case when x.bank_date between '01-Jan-23' and '31-Jan-23' then x.op_id end) as January,
+       count(unique x.op_id)  total_say
+  from birbank.f_operation x
+ inner join birbank.d_customers_new y
+    on x.CLIENT_ID = y.USER_ID
+ where x.source_type = 3
+   and x.destination_type = 2
+   and x.op_status = 1
+   and x.client_id in
+       (select user_id
+          from birbank.d_customers_new
+         where cms_id in
+               (select z.cms_id
+                  from cms.d_customer z
+                 where z.cms_id in (select m.credit_cms_id
+                                      from cms.f_transaction m
+                                     where m.debitentcode = '3'
+                                       and m.credit_cms_id in
+                                           (select k.cms_id
+                                              from cms.d_card k
+                                             where k.ministry_code = '037'
+                                               and k.product_code = '3')
+                                       and m.value_date between '30-Jan-23' and '31-Jan-23')))
+   and x.bank_date between '01-Nov-22' and '31-Jan-23'  
+ group by x.client_id, y.NAME, y.FULL_NAME
+ having count(unique case when x.bank_date between '01-Jan-23' and '31-Jan-23' then x.op_id  end) >0
+ order by TOTAL_SAY desc;
+
+-----
+
+with cte_1 as (
+
+select cmp.trannumber,listagg(unique cmp.FROMACCT, ' , ') as FROMACCT
+  from cms.f_tla_cmp CMP
+ WHERE CMP.TERMDATE between to_date('01.11.2022', 'dd.mm.yyyy') and to_date('31.01.2023', 'dd.mm.yyyy')
+   and substr(FROMACCT, 1, 2) = '38'
+   and length(FROMACCT) = 20
+ group by cmp.TRANNUMBER ) ,
+ 
+ cte_2 as (select x.client_id,
+       y.NAME,
+       y.FULL_NAME,
+       x.debit_trans_id,
+       listagg(unique x.DEBIT_PRODUCT, ' , ') x_DEBIT_PRODUCT,   
+       listagg(unique x.DEBIT_TRANS_ID, ' , ') x_DEBIT_TRANS_ID,
+       count(unique case when x.bank_date between '01-Nov-22' and '30-Nov-22' then x.op_id end) as November, 
+       count(unique case when x.bank_date between '01-Dec-22' and '31-Dec-22' then x.op_id end) as December,
+       count(unique case when x.bank_date between '01-Jan-23' and '31-Jan-23' then x.op_id  end) as January,
+       count(unique x.op_id) as total_say
+
+  from birbank.f_operation x
+ inner join birbank.d_customers_new y
+    on x.CLIENT_ID = y.USER_ID
+ where x.source_type = 3
+   and x.destination_type = 2
+   and x.op_status = 1
+   and x.client_id in
+       (select user_id
+          from birbank.d_customers_new
+         where cms_id in
+               (select z.cms_id
+                  from cms.d_customer z
+                 where z.cms_id in (select m.credit_cms_id
+                                      from cms.f_transaction m
+                                     where m.debitentcode = '3'
+                                       and m.credit_cms_id in
+                                           (select k.cms_id
+                                              from cms.d_card k
+                                             where k.ministry_code = '037'
+                                               and k.product_code = '3')
+                                       and m.value_date between '30-Jan-23' and '31-Jan-23')))
+   and x.bank_date between '01-Nov-22' and '31-Jan-23'  --- select look up range
+ group by x.client_id, y.NAME, y.FULL_NAME,x.debit_trans_id
+ having count(unique case when x.bank_date between '01-Jan-23' and '31-Jan-23' then x.op_id  end) >0
+ order by TOTAL_SAY desc
+)
+select  * from cte_2 left join cte_1 on   cte_2.debit_trans_id = cte_1.trannumber
+  
+
+------
+create table FROMACCT as
+select cmp.trannumber, listagg(unique cmp.FROMACCT, ' , ') as FROMACCT
+    from cms.f_tla_cmp CMP
+   WHERE CMP.TERMDATE between to_date('01.11.2022', 'dd.mm.yyyy') and to_date('31.01.2023', 'dd.mm.yyyy')
+     and substr(FROMACCT, 1, 2) = '38'
+     and length(FROMACCT) = 20
+   group by cmp.TRANNUMBER;
+ 
+ ------------
+ --drop table main_table;
+ create table main_table as
+ select x.client_id,
+       y.NAME,
+       y.FULL_NAME,
+       x.debit_trans_id,
+       listagg(unique x.DEBIT_PRODUCT, ' , ') x_DEBIT_PRODUCT,   
+       listagg(unique x.DEBIT_TRANS_ID, ' , ') x_DEBIT_TRANS_ID,
+       count(unique case when x.bank_date between '01-Nov-22' and '30-Nov-22' then x.op_id end) as November, 
+       count(unique case when x.bank_date between '01-Dec-22' and '31-Dec-22' then x.op_id end) as December,
+       count(unique case when x.bank_date between '01-Jan-23' and '31-Jan-23' then x.op_id  end) as January,
+       count(unique x.op_id) as total_say
+
+  from birbank.f_operation x
+ inner join birbank.d_customers_new y
+    on x.CLIENT_ID = y.USER_ID
+ where x.source_type = 3
+   and x.destination_type = 2
+   and x.op_status = 1
+   and x.client_id in
+       (select user_id
+          from birbank.d_customers_new
+         where cms_id in
+               (select z.cms_id
+                  from cms.d_customer z
+                 where z.cms_id in (select m.credit_cms_id
+                                      from cms.f_transaction m
+                                     where m.debitentcode = '3'
+                                       and m.credit_cms_id in
+                                           (select k.cms_id
+                                              from cms.d_card k
+                                             where k.ministry_code = '037'
+                                               and k.product_code = '3')
+                                       and m.value_date between '30-Jan-23' and '31-Jan-23')))
+   and x.bank_date between '01-Nov-22' and '31-Jan-23'  --- select look up range
+ group by x.client_id, y.NAME, y.FULL_NAME,x.debit_trans_id
+ having count(unique case when x.bank_date between '01-Jan-23' and '31-Jan-23' then x.op_id  end) >0
+ order by TOTAL_SAY desc;
+ 
+ select  * from main_table left join FROMACCT on   main_table.debit_trans_id = FROMACCT.trannumber;
+  

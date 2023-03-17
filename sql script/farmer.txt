@@ -1,0 +1,27 @@
+WITH farmer_cards AS
+ (SELECT a.cms_id, a.cif, c.pin AS farmer_fin, c.full_name, b.address
+    FROM cms.d_card a
+   INNER JOIN cms.d_card_cns b
+      ON a.objectuid = b.objectuid
+   INNER JOIN dwh.d_customer c
+      ON a.cms_id = c.cms_id
+   WHERE a.finprofile_code = 245),
+employees_phones AS
+ (SELECT emp.fin,
+         emp.name,
+         emp.vezife,
+         emp.branch,
+         '994' || substr(replace(emp.phone, '-', ''), 2, 9) AS phone
+    FROM fraud.emp_2 emp)
+SELECT /* +PARALLEL*/
+ unique f.*,
+ g.*,
+ case
+   when (f.farmer_fin = g.fin or lower(FULL_NAME) = lower(NAME)) then
+    'no'
+   else
+    'yes'
+ end as is_Fraud
+  FROM farmer_cards f
+ inner join employees_phones g
+    on f.address = g.phone

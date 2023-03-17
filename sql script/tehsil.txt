@@ -1,0 +1,18 @@
+select case 
+when a.amount >=2500 then '2500+'
+  when a.amount >=2000 and  a.amount < 2500 then '2000 - 2500'
+    when a.amount >=1000 then '1000+' 
+      when a.amount <1000 then '1000 den ashaghi' 
+       else null    end as amount ,
+count(distinct a.op_id) say
+from birbank.f_operation a 
+where a.provider_id in ('2001','2002','2003')
+and OP_STATUS =1 
+and a.op_date between to_date('01.01.2023','dd.mm.yyyy') and to_date('01.02.2023','dd.mm.yyyy')
+group by  case 
+when a.amount >=2500 then '2500+'
+  when a.amount >=2000 and  a.amount < 2500 then '2000 - 2500'
+    when a.amount >=1000 then '1000+' 
+      when a.amount <1000 then '1000 den ashaghi' 
+       else null    end
+order by 2 desc ;

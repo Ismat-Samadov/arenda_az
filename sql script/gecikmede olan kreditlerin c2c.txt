@@ -1,0 +1,41 @@
+with cust as
+ (select
+   p.cms_id,
+   a.principal_overdue_days,
+   a.due_interest_overdue_days,
+   a.CUSTOMER_NAME,
+   p.start_date,
+   p.expert_name
+    from dwh.d_contract_credit P
+   inner join dwh.d_customer Q ON P.CIF = Q.CIF
+   inner join front.dm_credit_portfolio a on p.cif = a.cif
+   WHERE a.bank_date = '20-Feb-23'
+     AND a.principal_overdue_days > 0),
+Emekdash as
+ (select L.name, L.fin, o.cms_id
+    from fraud.emp_2 L
+    join cms.d_customer o
+      on l.fin = o.pin)
+
+select /*+parallel */
+ a.value_date,
+ a.idclient      as alan,
+ b.idclient      as gonderen,
+ a.pan           as gonderen_pan,
+ a.accountnoone  AS gonderen_acc,
+ Y.CUSTOMER_NAME AS gonderenin_adi,
+ h.name          as qebuledenin_adi,
+ B.PAN           as qebuleden_pan,
+ B.ACCOUNTNOONE  as gebul_eden,
+ a.org_amount,
+ a.org_currency,
+ a.fcy_amount,
+ a.currency,
+ y.expert_name,
+ y.start_date
+  from cms.f_transaction_details A
+ inner join cms.f_transaction_details B on A.Invoice = b.Invoice
+ inner join cust Y on A.IDCLIENT = Y.CMS_ID
+ INNER JOIN Emekdash H on b.idclient = H.CMS_ID
+ where a.entcode = '32'
+   AND B.ENTCODE = '33'
