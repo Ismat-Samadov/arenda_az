@@ -1,0 +1,46 @@
+
+--- Visa kartlarına xarici ödənişlərdə 2% keşbek kampaniyası
+
+select /*+parallel */
+ d.pin,
+ d.full_name,
+ emp.vezife,
+ emp.shobe,
+ sum(a.cashback_amount) summa,
+ count(unique a.ID) say_id,
+ count(unique a.tranid) say_tran_id
+  from cms.f_cashback_transaction a
+ inner join DWH.D_CUSTOMER D on a.cms_id = d.cms_id
+ inner join fraud.emp_2 emp on emp.fin = d.pin
+ where a.BANK_DATE between to_date('17.03.2023', 'dd.mm.yyyy') and to_date('30.03.2023', 'dd.mm.yyyy')
+   and DIRECTION = 'CREDIT'
+   and a.CASHBACK_RATE = 2
+ group by d.pin, d.full_name, emp.vezife, emp.shobe
+ order by summa desc;
+
+-----check by pin
+
+select /*+parallel */
+ a.*
+  from cms.f_cashback_transaction a
+ inner join DWH.D_CUSTOMER D
+    on a.cms_id = d.cms_id
+ where DIRECTION = 'CREDIT'
+   AND D.PIN = '69NVDAM'
+   and a.BANK_DATE between to_date('17.03.2023', 'dd.mm.yyyy') and to_date('30.03.2023', 'dd.mm.yyyy')
+   and a.CASHBACK_RATE = 2
+
+----- butun mushteriler
+
+select /*+parallel */
+ d.pin,
+ d.full_name,
+ sum(a.cashback_amount) summa,
+ count(unique a.ID) say
+  from cms.f_cashback_transaction a
+ inner join DWH.D_CUSTOMER D on a.cms_id = d.cms_id
+where a.BANK_DATE between to_date('17.03.2023', 'dd.mm.yyyy') and to_date('30.03.2023', 'dd.mm.yyyy')
+  and a.DIRECTION = 'REVERSE'
+  and a.CASHBACK_RATE = 2
+ group by d.pin, d.full_name;
+ order by say desc;
