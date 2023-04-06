@@ -1,31 +1,44 @@
-select a.client_id, 
-       B.NAME,
-       B.FULL_NAME ,
+select A.client_id,
+       d.fin,
+       c.FULL_NAME ,
+       d.shobe,
        count(a.op_id) as say
+  from birbank.f_operation A
+ inner join birbank.d_customers_new B
+    on A.CLIENT_ID = B.USER_ID
+    inner join dwh.d_customer c on A.client_id = c.cms_id
+    inner join fraud.emp_2 d on c.pin=d.fin
+ where a.source_type = 3
+   and a.destination_type = 2
+   and a.op_status = 1
+   and a.bank_date between to_date('01.03.2023','dd.mm.yyyy') and to_date('31.03.2023','dd.mm.yyyy')
+ group by A.client_id,d.fin,c.FULL_NAME ,d.shobe
+ order by say desc;
+
+------------------------
+
+select DEBIT_PRODUCT, DEBIT_TRANS_ID
   from birbank.f_operation A
  inner join birbank.d_customers_new B
     on A.CLIENT_ID = B.USER_ID
  where a.source_type = 3
    and a.destination_type = 2
    and a.op_status = 1
-   and A.client_id in
-       (select user_id
-          from birbank.d_customers_new
-         where cms_id in
-               (select A.cms_id
-                  from cms.d_customer A
-                 where A.cms_id in (select m.credit_cms_id
-                                      from cms.f_transaction m
-                                     where m.debitentcode = '3'
-                                       and m.credit_cms_id in
-                                           (select z.cms_id
-                                              from cms.d_card z
-                                             where z.ministry_code = '037'
-                                               and z.product_code = '3')
-                                       and m.value_date between '30-Jan-23' and '31-Jan-23')))
-   and a.bank_date between '01-Jan-23' and '31-Jan-23'
- group by A.client_id, B.NAME, B.FULL_NAME
- order by say desc
+   and A.client_id = '3261940' ---join with client id to first table 
+   and a.bank_date between '01-Jan-23' and '31-Jan-23' --- select time range for birbank operations
+
+
+------
+
+select FROMACCT from cms.f_tla_cmp 
+where TRANNUMBER = '6233198850' ---join with trannumber to second table
+
+-------------
+
+select DEBIT_PRODUCT,DEBIT_TRANS_ID from birbank.f_operation a
+where a.client_id='3261940' --- join 
+and a.debit_product = '676867******3625'  --- join
+and a.BANK_DATE between '01-Jan-23' and '31-Jan-23' --- select time range for birbank operations
 
 ------------------------
 
