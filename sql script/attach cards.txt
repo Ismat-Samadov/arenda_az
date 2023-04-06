@@ -6,7 +6,7 @@ select A.client_id,
   from birbank.f_operation A
  inner join birbank.d_customers_new B
     on A.CLIENT_ID = B.USER_ID
-    inner join dwh.d_customer c on A.client_id = c.cms_id
+    inner join dwh.d_customer c on B.cms_id= c.cms_id
     inner join fraud.emp_2 d on c.pin=d.fin
  where a.source_type = 3
    and a.destination_type = 2
