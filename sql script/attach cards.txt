@@ -26,40 +26,11 @@ select DEBIT_PRODUCT, DEBIT_TRANS_ID
    and a.op_status = 1
    and A.client_id = '3261940' ---join with client id to first table 
    and a.bank_date between '01-Jan-23' and '31-Jan-23' --- select time range for birbank operations
-
-
 ------
 
 select FROMACCT from cms.f_tla_cmp 
 where TRANNUMBER = '6233198850' ---join with trannumber to second table
-
 -------------
-
-select DEBIT_PRODUCT,DEBIT_TRANS_ID from birbank.f_operation a
-where a.client_id='3261940' --- join 
-and a.debit_product = '676867******3625'  --- join
-and a.BANK_DATE between '01-Jan-23' and '31-Jan-23' --- select time range for birbank operations
-
-------------------------
-
-select DEBIT_PRODUCT, DEBIT_TRANS_ID
-  from birbank.f_operation A
- inner join birbank.d_customers_new B
-    on A.CLIENT_ID = B.USER_ID
- where a.source_type = 3
-   and a.destination_type = 2
-   and a.op_status = 1
-   and A.client_id = '3261940' ---join with client id to first table 
-   and a.bank_date between '01-Jan-23' and '31-Jan-23' --- select time range for birbank operations
-
-
-------
-
-select FROMACCT from cms.f_tla_cmp 
-where TRANNUMBER = '6233198850' ---join with trannumber to second table
-
--------------
-
 select DEBIT_PRODUCT,DEBIT_TRANS_ID from birbank.f_operation a
 where a.client_id='3261940' --- join 
 and a.debit_product = '676867******3625'  --- join
