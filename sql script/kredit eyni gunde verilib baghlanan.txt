@@ -1,0 +1,19 @@
+with t as (
+select a.cif,
+       a.cms_id,
+       a.customer_name,
+       a.contract_ref_no,
+       a.interest_rate,
+       a.initial_amount,
+       a.start_date,
+       a.maturity_date,
+       case
+         when a.start_date = a.maturity_date then
+          'yes'
+         else
+          'no'
+       end as verilen_gun_baglanib
+  from dwh.d_contract_credit a
+ where a.expert_hr_code = '14378'
+   and a.start_date between date '2023-03-01' and date '2023-03-31')
+   select * from t where t.verilen_gun_baglanib ='yes'
