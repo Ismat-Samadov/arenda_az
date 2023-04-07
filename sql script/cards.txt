@@ -1,0 +1,5 @@
+select /* +PARALLEL*/
+ A.CMS_ID, A.PAN,A.CREATE_DATE,A.CANCEL_DATE
+  from cms.d_card A
+ where A.CMS_ID = '12478990'
+ order by a.create_date desc;
