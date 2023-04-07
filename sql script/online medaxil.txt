@@ -1,0 +1,15 @@
+select /* +parallel*/
+ A.ORIGDATE,c.pin, A.AMOUNTACCT, A.TERMOWNER, A.TERMLOCATION
+  from cms.f_tla_cmp a
+ inner join cms.d_card b
+    on a.guid = b.carduid 
+ inner join dwh.d_customer c
+    on b.cms_id = c.cms_id
+ inner join fraud.emp_2 d
+    on c.pin = d.fin
+ where A.ORIGDATE between to_date('01.03.2023','dd.mm.yyyy') and to_date('31.03.2023','dd.mm.yyyy')
+   and a.termsic = '6012'
+   AND A.AMOUNTACCT > 0
+   AND A.TYPE = '999'
+   AND A.ORIGTYPE = '1'
+ ORDER BY A.ORIGDATE DESC;
