@@ -1,0 +1,32 @@
+
+select /*+parallel */
+ d.pin,
+ d.full_name,
+ sum(case
+       when a.direction = 'DEBIT' then
+        cashback_amount
+     end) as debit,
+ sum(case
+       when a.direction = 'CREDIT' then
+        cashback_amount
+     end) as credit,
+ sum(case
+       when a.direction = 'REVERSE' then
+        cashback_amount
+     end) as reverse,
+ 
+ sum(case
+       when a.direction = 'CREDIT' then
+        cashback_amount
+     end) - sum(case
+                  when a.direction = 'DEBIT' then
+                   cashback_amount
+                end) - sum(case
+                             when a.direction = 'REVERSE' then
+                              cashback_amount
+                           end) as balans
+  from cms.f_cashback_transaction a
+ inner join DWH.D_CUSTOMER D
+ inner join fraud.emp_2 e
+    on d.pin = e.fin on a.cms_id = d.cms_id
+ group by d.pin, d.full_name;
