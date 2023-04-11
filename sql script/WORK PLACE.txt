@@ -1,0 +1,5 @@
+select E.PIN, C.TELEPHONE, E.WORK_POSITION, E.MINISTRY_NAME, E.COMPANY_NAME
+  from optimus.d_contract e
+ INNER JOIN DWH.D_CUSTOMER C
+    ON E.PIN = C.PIN
+ where e.pin = '60CFME6'
