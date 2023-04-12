@@ -1,0 +1,2 @@
+select * from dvs.d_dvs_public_person_orders_steps a inner join dvs.f_online_account_open b on a.order_id=b.order_id
+where a.steps_status ='rejected';
