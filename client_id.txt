@@ -1,10 +1,9 @@
-select A.client_id,B.USER_ID,
-       d.fin,
-       c.FULL_NAME ,
-       d.shobe
+select A.client_id, B.USER_ID, d.fin, b.cms_id, c.FULL_NAME, d.shobe
   from birbank.f_operation A
  inner join birbank.d_customers_new B
     on A.CLIENT_ID = B.USER_ID
-    inner join dwh.d_customer c on B.cms_id= c.cms_id
-    inner join fraud.emp_2 d on c.pin=d.fin
-    where d.fin = '60CFME6'
+ inner join dwh.d_customer c
+    on B.cms_id = c.cms_id
+ inner join fraud.emp_2 d
+    on c.pin = d.fin
+ where d.fin = '60CFME6';
