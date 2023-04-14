@@ -1,5 +1,5 @@
-SELECT * FROM BIRBANK.D_RMS_USEDPROMOCODE A WHERE A.FIN ='60CFME6';   ------- fin kod alanin fin kodudur
-SELECT A.* FROM BIRBANK.D_RMS_LOYALTY_REFERRAL A WHERE A.REFERRAL_PIN='60CFME6';  ----fin kod alanin finidir
+SELECT * FROM BIRBANK.D_RMS_USEDPROMOCODE A WHERE A.FIN ='60CFME6';   ------- fin kod kart alanin fin kodudur
+SELECT A.* FROM BIRBANK.D_RMS_LOYALTY_REFERRAL A WHERE A.REFERRAL_PIN='60CFME6';  ----fin kod kart alanin finidir
 SELECT * FROM BIRBANK.F_RMS_PROMOCODE A  WHERE A.CMS_ID ='6062485'; ----MUSTERI UZRE CEDVEL fin kodu ve cms id-si
  
 
@@ -10,6 +10,7 @@ SELECT * FROM BIRBANK.F_RMS_PROMOCODE A  WHERE A.CMS_ID ='6062485'; ----MUSTERI 
 ---CMS_ID + AMOUNT OF ACCEPTER + PIN
 ---WHERE  C.PIN = '2HFW2SQ' ;
 
+---customer info
 
 SELECT d.*
   FROM DWH.D_CUSTOMER D
@@ -21,6 +22,8 @@ SELECT d.*
     ON B.PROMO_CODE = C.PROMO_CODE
  WHERE D.PIN = '60CFME6';
 
+--- top 10 musteri referral uzre 
+
 select /*+parallel */
  d.pin, d.full_name, sum(a.cashback_amount) summa
   from cms.f_cashback_transaction a
@@ -31,3 +34,15 @@ select /*+parallel */
    and DIRECTION = 'CREDIT'
  group by d.pin, d.full_name
  order by summa desc fetch first 10 rows only;
+
+---  FIN KODU VEREN VE HEMIN MUSTERIDEN ALANLAR
+
+SELECT
+    c.pin AS referance_edenin_fini,
+    b.fin AS kodu_alanin_fini
+FROM
+         birbank.f_rms_promocode a
+    INNER JOIN birbank.d_rms_usedpromocode b ON a.promo_code = b.promo_code
+    INNER JOIN dwh.d_customer              c ON a.cms_id = c.cms_id
+WHERE
+    c.pin = '60CFME6';
