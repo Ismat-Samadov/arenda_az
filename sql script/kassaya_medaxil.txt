@@ -1,0 +1,13 @@
+select /* +parallel*/
+       B.BRANCH_NAME,
+       SUM(A.LCY_AMOUNT) SUMMA,
+       COUNT(UNIQUE A.OP_ID) AS OP_ID,
+       COUNT(UNIQUE A.DOC_NO) AS DOC_NO,
+       COUNT(*) SAY
+  from dwh.f_transaction A inner join dwh.D_BRANCH B on A.branch_code = B.branch_code
+ where a.bank_date between to_date('01.02.2023', 'dd.mm.yyyy') and to_date('28.02.2023', 'dd.mm.yyyy')
+   AND DRCR = 'C'
+   AND A.CBAR_CODE = '41010'
+   AND A.CONTRA_CBAR_CODE = '10010'
+   GROUP BY B.BRANCH_NAME
+   order by say desc;
