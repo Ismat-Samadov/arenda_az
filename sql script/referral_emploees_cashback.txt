@@ -1,15 +1,26 @@
-select /*+parallel */  emp.fin,emp.name ,sum(a.cashback_amount ) summa
-
-  from cms.f_cashback_transaction a
-
-  inner join DWH.D_CUSTOMER D on a.cms_id =d.cms_id
-
-  inner join emp on emp.fin =d.pin
-
- where TERMNAME ='LOYALTY_REFERRAL_5'
-
- and DIRECTION ='CREDIT'
-
-group by  emp.fin,emp.name
-
-order by summa desc
+SELECT /*+parallel */
+    emp.fin,
+    emp.name,
+    emp.branch,
+    emp.shobe,
+    emp.bolme,
+    emp.vezife,
+    emp.vezife_2,
+    SUM(a.cashback_amount) summa
+FROM
+         cms.f_cashback_transaction a
+    INNER JOIN dwh.d_customer d ON a.cms_id = d.cms_id
+    INNER JOIN fraud.emp_2    emp ON emp.fin = d.pin
+WHERE
+        termname = 'LOYALTY_REFERRAL_5'
+    AND direction = 'CREDIT'
+GROUP BY
+    emp.fin,
+    emp.name,
+    emp.branch,
+    emp.shobe,
+    emp.bolme,
+    emp.vezife,
+    emp.vezife_2
+ORDER BY
+    summa DESC;
