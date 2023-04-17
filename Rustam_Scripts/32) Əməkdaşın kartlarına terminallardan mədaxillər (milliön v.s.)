@@ -1,0 +1,50 @@
+--Emekdashlarin kartlarina pos terminallardan medaxil olunan vesaitler (emanat, million) 
+
+WITH HESABLAR AS
+ (SELECT C.CMS_ID,
+         C.CIF,
+         C.NAME,
+         C.ACCOUNT,
+         C.OBJECTUID
+    FROM CMS.D_CARD C
+   WHERE C.STATUS = '1'
+         AND C.CMS_ID IN
+         (SELECT D.CMS_ID
+                FROM CMS.D_CARD D
+               WHERE D.STATUS = '1'
+                     AND LOWER(D.FINPROFILE_NAME) LIKE '%salary%'
+                     AND D.MINISTRY_CODE = '037'
+                     AND LOWER(D.PRODUCT_NAME) LIKE '%electron%salary%')),
+EMELIYYATLAR AS
+ (SELECT T.VALUE_TIME,
+         T.IDCLIENT AS CMS_ID,
+         T.PAN,
+         T.ACCOUNTNOONE,
+         T.LCY_AMOUNT,
+         T.OBJECTUID,
+         CASE
+           WHEN T.ACCOUNTNOTWO = '10080319441000007000' THEN
+            'MILLION'
+           WHEN T.ACCOUNTNOTWO = '10080329441000007000' THEN
+            'EMANAT'
+           WHEN T.ACCOUNTNOTWO = '10080339441000007000' THEN
+            'KASSAM.AZ'
+           WHEN T.ACCOUNTNOTWO = '10080349441000007000' THEN
+            'MPAY'
+           ELSE
+            'OTHER'
+         END TERM
+    FROM CMS.F_TRANSACTION_DETAILS T
+   WHERE VALUE_DATE BETWEEN DATE '2022-05-01' AND DATE
+   '2022-11-20'
+         AND
+         T.ACCOUNTNOTWO IN ('10080319441000007000',
+                            '10080329441000007000',
+                            '10080339441000007000',
+                            '10080349441000007000'))
+SELECT E.*,h.cms_id, h.cif, h.name
+  FROM EMELIYYATLAR E
+  JOIN HESABLAR H
+    ON E.OBJECTUID = H.OBJECTUID
+ WHERE E.LCY_AMOUNT > 500
+ ORDER BY E.LCY_AMOUNT DESC;

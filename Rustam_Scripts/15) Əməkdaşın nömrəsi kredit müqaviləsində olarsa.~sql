@@ -1,0 +1,27 @@
+with emekdash as
+(select cms_id, cif, name, login_idx from birbank.d_customers_new
+where cms_id in (select c.cms_id
+                            from cms.d_card c
+                           where c.status = '1'
+                                 and c.cms_id in
+                                 (select d.cms_id
+                                        from cms.d_card d
+                                       where d.status = '1'
+                                             and lower(d.finprofile_name) like
+                                             '%salary%'
+                                             and d.ministry_code = '037'
+                                             and lower(d.product_name) like
+                                             '%electron%salary%'))),
+mushteri as
+(select distinct dc.cif, dc.mobile, cc.full_name,cc.cms_id
+from optimus.d_customer_contact dc
+join optimus.d_contract c on c.cif = dc.cif
+join dwh.d_customer cc on cc.cif = dc.cif
+where trunc(c.created_date_time) between date '2022-09-01' and date '2022-09-30')
+select e.name, e.cif, e.cms_id, e.login_idx,
+       m.full_name, m.cif, m.mobile,m.cms_id,
+       case when e.cif = m.cif or e.cms_id = m.cms_id then 'okay'
+         else 'not okay'
+           end as result
+from emekdash e
+join mushteri m on e.login_idx = m.mobile;
