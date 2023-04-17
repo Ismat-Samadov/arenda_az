@@ -1,0 +1,3 @@
+select *
+  from birbank.f_operation a join birbank.d_customers_new v on a.client_id = v.user_id
+ where v.cif = '8930610';
