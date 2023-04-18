@@ -1,0 +1,14 @@
+select a.cms_id,a.cif,a.pin,a.telephone from dwh.d_customer a where a.pin='4TH0DB5';
+select * from birbank.d_op_3ds_activation a where a.pin='4TH0DB5';
+select * from birbank.d_person_3ds_info a where a.new_subscription ='+994504787463';--'+994556348414';
+select * from birbank.d_different_user_device_login_details where cif='8930610';
+select * from birbank.f_user_statistics a inner join birbank.d_customers_new b on a.user_id=b.user_id where b.cif ='8930610';
+select * from birbank.d_different_user_device_login_details a where a.mobile_number ='+994504787463';
+select * from birbank.d_different_user_device_login_details_v1 a where a.mobile_number ='+994504787463';
+select * from birbank.d_op_3ds_activation a where a.pin='60CFME6';
+SELECT * FROM birbank.d_person_3ds_info a where a.login='+994504787463';
+select * from birbank.f_birbank_logins a inner join birbank.d_customers_new b on a.user_id=b.user_id where b.cif ='8930610';
+select * from birbank.f_customer_registration a inner join birbank.d_customers_new b on a.user_id=b.user_id where b.cif ='8930610';
+select * from birbank.d_customer_device a inner join birbank.d_customers_new b on a.user_id=b.user_id where b.cif ='8930610';
+select * from birbank.f_op_3ds_whl_info a inner join birbank.d_customers_new b on a.user_id=b.user_id where b.cif ='8930610';
+

@@ -1,0 +1,5 @@
+select * from birbank.D_OP_3DS_ACTIVATION a ;
+select * from birbank.D_PERSON_3DS_INFO a where a.login = '+994504787463';
+select * from birbank.D_ACTIVATION_3DS_STEPS a;
+select * from birbank.F_OP_3DS_WHL_INFO a;
+select * from cx.D_3D_SMS a;
