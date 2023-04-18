@@ -6,3 +6,5 @@ select * from ORION.d_Users a where a.email like '%niymat.musayev@bankrespublika
 select * from birbank.D_CUSTOMER_OPERATION_DETAIL a where a.mail like '%niymat.musayev@bankrespublika.az%';
 select * from birbank.D_CUSTOMERS_HISTORY a where a.email like '%niymat.musayev@bankrespublika.az%';
 select * from dwh.d_customer a where a.email like '%niymat.musayev@bankrespublika.az%';
+
+SELECT * FROM  birbank.d_customers_new b WHERE B.EMAIL like '%niymat.musayev@bankrespublika.az%';
