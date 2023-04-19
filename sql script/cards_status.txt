@@ -1,0 +1,6 @@
+select z.pan, z.create_date, z.cancel_date,z.close_date, b.name
+  from cms.d_card z
+ inner join cms.d_card_status b
+    on z.status = b.status
+ WHERE Z.CMS_ID = '6062485'
+ order by z.create_date asc ;
