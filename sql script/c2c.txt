@@ -1,3 +1,21 @@
+select A.VALUE_DATE,
+       B.FULL_NAME AS GONDEREN,
+       B.PIN AS GONDEREN_PIN,
+       A.PAN AS ALAN_PAN,
+       D.FULL_NAME AS ALAN,
+       D.PIN AS ALAN_PIN,
+       C.PAN AS GONDEREN_PAN,
+       A.LCY_AMOUNT
+  from cms.f_transaction_details A INNER JOIN cms.d_customer B ON A.IDCLIENT = B.CMS_ID
+  INNER JOIN cms.f_transaction_details C ON A.INVOICE=C.INVOICE 
+  INNER JOIN cms.d_customer D ON C.IDCLIENT = D.CMS_ID
+ WHERE A.ENTCODE = '32'
+   AND C.ENTCODE = '33'
+   AND A.value_date = TO_DATE('10.04.2022', 'dd.mm.yyyy')
+   AND A.TERMCODE = '42271'
+   AND A.Term = 'BirBank10'
+   AND D.PIN='60CFME6';
+---------
 select a.value_date,
        a.pan as gonderen_pan,
        a.accountnoone AS gonderen,
