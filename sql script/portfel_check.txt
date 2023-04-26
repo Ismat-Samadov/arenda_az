@@ -1,0 +1,15 @@
+SELECT /* +parallel*/
+ A.EXPERT_NAME,
+ B.telephone,
+ COUNT(UNIQUE A.PIN) PHONE_COUNT,
+ COUNT(UNIQUE A.CONTRACT_REF_NO) CONTRACT_COUNT
+  FROM FRONT.DM_CREDIT_PORTFOLIO A
+ inner join dwh.d_customer b
+    on a.cif = b.cif
+ WHERE A.START_DATE > TO_DATE('01.04.2023', 'dd.mm.yyyy')
+   AND A.EXPERT_NAME IS NOT NULL
+   AND B.telephone IS NOT NULL
+   AND B.telephone != '0'
+   AND A.EXPERT_NAME != 'optimuswebsite'
+ GROUP BY A.EXPERT_NAME, B.telephone
+ ORDER BY PHONE_COUNT DESC;
