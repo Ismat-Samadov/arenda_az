@@ -1,0 +1,12 @@
+select /* +parallel*/ *
+  from birbank.f_operation a
+ inner join birbank.d_customers_new b
+    on a.client_id = b.user_id
+ inner join dwh.d_customer d
+    on b.cms_id = d.cms_id
+ inner join fraud.emp_2 c
+    on d.pin = c.fin
+ where a.bank_date > to_date('01.09.2022', 'dd.mm.yyyy')
+   and (a.credit_product like '%41010%' or a.credit_product like '%41020%')
+   --and (a.DEBIT_PRODUCT like '%41010%' or a.DEBIT_PRODUCT like '%41020%')
+  -- AND c.fin ='65CMFE9';
