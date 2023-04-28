@@ -1,0 +1,5 @@
+select b.cif, a.type,max(a.linked_date) son_tarix
+  from BIRBANK.D_CUSTOMER_DEVICE a
+ inner join birbank.d_customers_new b
+    on a.user_id = b.user_id
+ group by b.cif,a.type;
