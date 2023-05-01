@@ -1,0 +1,30 @@
+select /* +parallel*/
+unique b.cif,
+b.vezife,
+a.start_date,
+a.maturity_date,
+a.contract_ref_no,
+ROUND(a.initial_amount) AMOUNT
+from dwh.D_CONTRACT_DEPOSIT a
+inner join fraud.emp_01_05_2023 b
+    on a.cif = b.cif
+where (lower(b.vezife) like '%kass%' or lower(b.vezife_2) like '%kass%')
+   and a.Close_Date IS NULL;
+
+
+select /* +parallel*/
+unique b.cif,
+B.NAME,
+b.vezife,B.BRANCH,B.SHOBE,
+a.start_date,
+a.maturity_date,
+a.contract_ref_no,
+a.close_date,
+ROUND( A.INITIAL_AMOUNT) AS AMOUNT
+  from dwh.D_CONTRACT_DEPOSIT a
+inner join fraud.emp_01_05_2023 b
+    on a.cif = b.cif
+where (lower(b.vezife) like '%kass%' or lower(b.vezife_2) like '%kass%')
+   and a.close_date > TO_DATE('17.03.2023', 'DD.MM.YYYY');
+
+
