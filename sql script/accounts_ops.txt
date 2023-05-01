@@ -1,0 +1,1 @@
+select * from dwh.f_transaction a where a.account='41010029440337126138'; 
