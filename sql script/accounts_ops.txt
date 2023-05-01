@@ -1,1 +1,5 @@
-select * from dwh.f_transaction a where a.account='41010029440337126138'; 
+select b.fullname, a.txn_dt_time, a.*
+  from dwh.f_transaction a
+ inner join dwh.d_user b
+    on a.user_id = b.id
+ where a.account = '41010029440337126138';
