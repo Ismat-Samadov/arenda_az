@@ -59,3 +59,30 @@ select /* +parallel*/
    and Alan.entcode = '32'
    AND QebulEden.ENTCODE = '33'
    AND Alan.TERMCODE = '42271';
+--------------------
+select /* +parallel*/
+       Alan.value_date,
+       Alanc.full_name as Gonderenin_adi,
+       Alanc.Pin as Gonderenin_PINI,
+       QebulEdend.full_name as Qebuledenin_Adi,
+       QebulEdendEmp.fin as QebulEdenFini,
+       Alan.pan as gonderen_pan,
+       QebulEden.PAN as qebuleden_pan,
+       Alan.accountnoone AS gonderen,
+       QebulEden.ACCOUNTNOONE as gebul_eden_account ,
+       Alan.org_amount,
+       Alan.org_currency,
+       Alan.fcy_amount,
+       Alan.currency ,
+       case when   Alanc.Pin = QebulEdendEmp.fin then 'yes' else 'no' end as useless_cases
+        from cms.f_transaction_details Alan
+  inner join cms.f_transaction_details QebulEden  on Alan.Invoice = QebulEden.Invoice
+  inner join cms.d_customer Alanc on Alan.idclient = Alanc.cms_id 
+  inner join cms.d_customer QebulEdend on QebulEden.idclient = QebulEdend.cms_id 
+  inner join fraud.emp_2 QebulEdendEmp on QebulEdend.pin=QebulEdendEmp.fin
+where Alan.value_date between to_date('01.01.2022','dd.mm.yyyy') and to_date('05.05.2023','dd.mm.yyyy')
+   and Alan.entcode = '32'
+   AND QebulEden.ENTCODE = '33'
+   AND Alan.TERMCODE = '42271'
+   AND QebulEdendEmp.fin = '60CFME6'
+   and Alanc.Pin ='5ZCQUP2';
