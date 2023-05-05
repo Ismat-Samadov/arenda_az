@@ -1,0 +1,8 @@
+select /* +parallel*/
+       *
+  from dwh.f_transaction A 
+ where /*a.bank_date between to_date('01.02.2023', 'dd.mm.yyyy') and to_date('28.02.2023', 'dd.mm.yyyy')
+   AND*/ DRCR = 'C'
+   AND A.CBAR_CODE = '41010'
+   AND A.CONTRA_CBAR_CODE = '10010'
+   and a.cif ='8992717';
