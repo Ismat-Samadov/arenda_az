@@ -1,5 +1,7 @@
-select * from birbank.D_OP_3DS_ACTIVATION a ;
-select * from birbank.D_PERSON_3DS_INFO a where a.login = '+994504787463';
+select * from birbank.D_OP_3DS_ACTIVATION a WHERE A.PIN='60CFME6';
+select * from birbank.D_PERSON_3DS_INFO a INNER JOIN BIRBANK.d_Customers_New B ON A.USER_ID = B.USER_ID where B.CIF = '1275200';
 select * from birbank.D_ACTIVATION_3DS_STEPS a;
-select * from birbank.F_OP_3DS_WHL_INFO a;
-select * from cx.D_3D_SMS a;
+
+select A.* from birbank.F_OP_3DS_WHL_INFO a INNER JOIN BIRBANK.d_Customers_New B ON A.USER_ID = B.USER_ID WHERE B.CIF = '1275200';
+ 
+select * from cx.D_3D_SMS a ;
