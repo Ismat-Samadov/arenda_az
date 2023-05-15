@@ -1,0 +1,22 @@
+with CUST AS
+ (select a.full_name,
+         a.birth_date,
+         a.birth_place,
+         a.birth_country,
+         a.cif,
+         a.cms_id
+    from dwh.d_customer a
+   where lower(a.first_name) like '%naid%'
+     AND A.GENDER like '%F%'
+     and a.birth_date > to_date('01.01.1991', 'dd.mm.yyyy'))
+select /* +parallel*/
+ cust.*,
+ b.termlocation,
+ b.lcy_amount,
+ b.value_date
+  from cust
+ inner join cms.f_transaction_details b
+    on cust.cms_id = b.idclient
+ where b.value_date > to_date('01.01.2023', 'dd.mm.yyyy')
+   and upper(b.termlocation) like '%SECOND CUP BUM,BAKU,AZ%'
+ order by b.value_date desc;
