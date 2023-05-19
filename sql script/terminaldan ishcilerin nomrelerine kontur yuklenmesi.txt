@@ -1,0 +1,18 @@
+with t as
+ (select substr(replace(s.phone, '-'), 2) phone,
+         s.pin,
+         s.cif,
+         s.name,
+         s.branch,
+         s.shobe,
+         s.bolme
+    from fraud.emp_01_05_2023 s)
+select /* +parallel*/
+ t.*, a.VALUE_DATE, A.RECIPIENT_NAME, A.AMOUNT
+  from sfour.f_transaction_all a
+ inner join t
+    on a.Abone_Code = t.phone
+ WHERE /*a.value_date between to_date('01.01.2023', 'dd.mm.yyyy') and to_date('30.04.2023', 'dd.mm.yyyy')
+   and*/
+ REGEXP_LIKE(lower(a.SERVICE_TYPE), 'azercell|bakcell|nar') 
+ order by a.value_date desc;
