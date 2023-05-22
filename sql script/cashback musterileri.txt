@@ -13,3 +13,18 @@ select /*+parallel */
    --AND D.PIN = '60CFME6'
  group by d.pin, d.full_name
  order by summa desc fetch first 10 rows only;
+
+-----
+select a.bank_time,
+       A.TERMOWNER,
+       ROUND(A.CASHBACK_AMOUNT, 1) CASHBACK,
+       ROUND(A.FROM_ORIGAMOUNT, 1) AMOUNT,
+       A.MASKED_PAN,
+       C.PRODUCT_NAME
+  from cms.f_cashback_transaction a
+ inner join dwh.d_customer b
+    on a.cms_id = b.cms_id
+ INNER JOIN CMS.D_CARD C
+    ON A.CARDUID = C.CARDUID
+ where b.pin = '60CFME6'
+ ORDER BY a.bank_time DESC;
