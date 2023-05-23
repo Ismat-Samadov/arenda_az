@@ -1,0 +1,10 @@
+select a.DEVICE_ID,a.user_agent,
+       count(*) qeydiyyat_sayi,
+       count(unique cif) unikal_cif_sayi,
+       listagg(unique b.cif, ', ') cif
+  from birbank.d_customer_device a
+ inner join birbank.d_customers_new b
+    on a.user_id = b.user_id
+ where a.linked_date > to_date('01.05.2023', 'dd.mm.yyyy')
+ group by a.device_id,a.user_agent
+ order by qeydiyyat_sayi desc ;
