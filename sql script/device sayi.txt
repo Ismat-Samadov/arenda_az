@@ -23,4 +23,5 @@ select a.DEVICE_ID,
             ELSE
              'OTHER'
           END
+  having count(*)>2
  order by qeydiyyat_sayi desc;
