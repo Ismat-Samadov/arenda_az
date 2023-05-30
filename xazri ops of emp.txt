@@ -1,0 +1,9 @@
+with t as
+ (select b.cms_id,b.cif,c.name,b.phone,c.vezife,c.shobe, to_number(substr(b.phone, -9)) numbers_emp
+    from birbank.d_customers_new b
+   inner join fraud.emp_01_05_2023 c
+      on b.cms_id = c.cms_id),
+k as
+ (select to_number(substr(a.mobile_number, -9)) numbers, a.*
+    from BIRBANK.f_Op_Xazri a)
+select t.cms_id,t.cif,t.name,t.vezife,t.shobe,k.* from t inner join k on t.numbers_emp = k.numbers;
