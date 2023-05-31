@@ -28,3 +28,29 @@ select a.bank_time,
     ON A.CARDUID = C.CARDUID
  where b.pin = '60CFME6'
  ORDER BY a.bank_time DESC;
+
+----------
+select /*+parallel */
+ a.bank_time,
+ a.TERMOWNER,
+ round(a.CASHBACK_RATE, 1) CASHBACK_RATE,
+ round(a.CASHBACK_AMOUNT, 1) CASHBACK_AMOUNT,
+ round(a.BALANCE_AFTER, 1) BALANCE_AFTER,
+ a.DIRECTION,
+ b.pin,
+ b.marstat,
+ b.birth_date,
+ b.hiredate,
+ c.mcc,
+ c.mcc_description,
+ c.mcc_group,
+ d.id,
+ d.currency,
+ d.name
+  from cms.f_cashback_transaction a
+ inner join fraud.emp_01_05_2023 b
+    on a.cms_id = b.cms_id
+ INNER JOIN CMS.D_MCC_DETAILS C
+    ON A.MCC = C.MCC
+ inner join dwh.D_CURRENCY d
+    on a.from_cur = d.id
