@@ -6,3 +6,5 @@ WHERE state = 'ACTIVE'
 
 group by trim(replace(replace(replace(replace(replace(substr(a.user_agent, instr(a.user_agent, ',', 1,2),instr(a.user_agent, ',', 1,2) ),'model'), '"'),':'),',') ,' br'))
           order by say desc fetch first 10 rows only;
+
+          ----select count(distinct pin ) say from dwh.d_customer ;
