@@ -4,7 +4,7 @@ unique C.CONTRACT_REF_NO AS ID_OF_LOAN,c.cif
   from dwh.d_contract_credit c 
  INNER JOIN FRAUD.EMP_01_05_2023 D ON C.CIF=D.CIF
  where c.interest_rate >0 
-   and c.initial_amount>0 
+   and c.initial_amount>0	
    and c.close_date is null
    
 UNION ALL
