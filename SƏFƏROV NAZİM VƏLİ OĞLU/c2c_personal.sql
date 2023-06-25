@@ -1,0 +1,1 @@
+select * from fraud.transactions a where a.gonderenin_pini = '3Y8EFC4' or a.qebuledenin_pini='3Y8EFC4'

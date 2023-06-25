@@ -1,0 +1,1 @@
+select * from birbank.f_operation a inner join birbank.d_customers_new b on a.client_id=b.user_id where b.cms_id='298324'

@@ -1,0 +1,1 @@
+select * from cms.f_transaction_details a where a.idclient='298324' order by a.bank_date desc
