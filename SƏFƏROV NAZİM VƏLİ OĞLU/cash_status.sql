@@ -22,7 +22,7 @@ select * from (
        end as cash_status,a.lcy_amount
   from cms.f_transaction_details a  where a.idclient = '298324'
 )
-pivot 
+PIVOT 
 (
    sum(lcy_amount)
   for cash_status in ('cash','non-cash')
