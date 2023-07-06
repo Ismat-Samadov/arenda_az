@@ -12,6 +12,5 @@ select a.startdate,
   join elma.d_elma_user b  on a.initiator = b.id
   join elma.d_wfi_client_info c on a.wfid = c.instanceid
  where b.user_name = 'SafarovN'
-   AND LOWER(A.WORKFLOWINSTANCE_NAME) LIKE
-       n'%müştəri barədə ümumi məlumat%';
+   AND LOWER(A.WORKFLOWINSTANCE_NAME) LIKE    n'%müştəri barədə ümumi məlumat%';
             
