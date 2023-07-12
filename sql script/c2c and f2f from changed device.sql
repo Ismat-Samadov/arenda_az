@@ -38,4 +38,4 @@ select /* +parallel*/
    AND B.ENTCODE = '33'
    AND A.TERMCODE in ('42004', '42271')
    and t.say > 1
-   and (t.max_tarix = a.value_date or t.max_tarix = b.value_date)
+   and (t.max_tarix = a.value_date or t.max_tarix = b.value_date);
