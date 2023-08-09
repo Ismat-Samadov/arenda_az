@@ -1,5 +1,0 @@
-select * from dwh.d_contract_credit k 
-where
-    k.START_DATE between to_date('06.02.2023','dd.mm.yyyy') and to_date('01.03.2023','dd.mm.yyyy')
-and k.CLOSE_DATE >to_date('28.02.2023','dd.mm.yyyy')
-and k.initial_amount >0 ;

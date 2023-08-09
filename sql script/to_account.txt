@@ -1,7 +1,0 @@
-select /* +parallel*/
- c.fin,c.name,c.shobe,c.bolme,c.vezife,c.vezife_2,case when b.cif = c.cif then 'yes' else 'no' end as eyni_adam ,a.*
-  from birbank.f_operation a inner join birbank.d_customers_new b on a.client_id = b.user_id
-  inner join dwh.d_account c on c.account=a.credit_product
- inner join fraud.emp_01_05_2023 c on b.cif = c.cif
- where a.bank_date > to_date('25.04.2023', 'dd.mm.yyyy')
-  and  (a.credit_product like '%41010%' or a.credit_product like '%41020%')

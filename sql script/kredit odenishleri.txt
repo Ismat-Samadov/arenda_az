@@ -1,2 +1,0 @@
-select a.* from dwh.f_contract_transaction a 
-where a.cif='8930610';

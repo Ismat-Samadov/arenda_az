@@ -1,8 +1,0 @@
-SELECT   
---   to_date(BIRTH_DATE,'dd.mm.yyyy') birthd,
---    round((sysdate -to_date(BIRTH_DATE,'dd.mm.yyyy'))/360) as age,
-    round(AVG(round((sysdate - to_date(birth_date, 'dd.mm.yyyy')) / 360)))        AS mean_age,
-    round(MEDIAN(round((sysdate - to_date(birth_date, 'dd.mm.yyyy')) / 360)))     AS median_age,
-    round(STATS_MODE(round((sysdate - to_date(birth_date, 'dd.mm.yyyy')) / 360))) AS mod_age
-FROM
-    fraud.emp_2

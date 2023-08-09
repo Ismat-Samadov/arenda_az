@@ -1,8 +1,0 @@
-select a.full_name, a.birth_date, a.pin, a.cif, a.cms_id,a.id
-  from dwh.d_customer a
- where a.pin = '1MRWM8E';
-
-/* to_char(a.birth_date,'yyyy')='1999'  and 
-       lower(a.first_name) = 'afaq'
-   and lower(a.first_name) like n'%qoşqar%'
-   and lower(a.last_name) like n'%ramazanov%';*/

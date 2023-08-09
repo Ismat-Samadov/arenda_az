@@ -1,8 +1,0 @@
-select a.bank_date,a.termlocation
-  from cms.f_transaction_details a
- inner join dwh.d_customer b
-    on a.idclient = b.cms_id
- where b.CIF = '3406166'
- AND LOWER(TERMLOCATION) LIKE '%credit%'
- ORDER BY BANK_DATE DESC
---'65CFME9'

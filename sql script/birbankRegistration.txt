@@ -1,8 +1,0 @@
-select /* +parallel*/
-a.created_date,
-a.binding_type,
-a.login
-from birbank.f_customer_registration a 
-inner join birbank.d_customers_new b on a.user_id=b.user_id 
-where b.cif ='3079524'
-order by a.created_date asc ;

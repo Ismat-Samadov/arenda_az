@@ -1,1 +1,0 @@
-select * from all_all_tables a where lower( a.table_name) like '%mkr%'

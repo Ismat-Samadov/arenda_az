@@ -1,1 +1,0 @@
-select * from cms.d_card where cif ='2947115'

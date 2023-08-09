@@ -1,4 +1,0 @@
- select * from dwh.f_transaction a --inner join dwh.d_customer b on a.idclient=b.cms_id 
- where a.cif ='1311311'-- order by a.bank_date desc
- and a.VALUE_DT =to_date('29.12.2022','dd.mm.yyyy')
- and a.LCY_AMOUNT=15000
